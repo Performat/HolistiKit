@@ -40,9 +40,14 @@ def xcodebuild(command, scheme)
     | xcpretty"
 end
 
+def submit_codecov(scheme)
+  run "bash <(curl -s https://codecov.io/bash) -J '^#{scheme}$'"
+end
+
 [:SpecUIKitFringes, :UIKitFringes, :ExampleApp].each do |scheme|
   xcodebuild(:build, scheme)
   xcodebuild(:test, scheme)
+  submit_codecov(scheme)
 end
 
 if @any_failures then
