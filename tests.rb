@@ -2,6 +2,7 @@
 
 DEVICE = "iPhone 7"
 IOS_VERSION = "10.1"
+CI = ENV["CI"] ? true : false
 
 def run(command)
   puts(command)
@@ -22,26 +23,20 @@ def xcodebuildCodeCoverage(command)
   command == :test ? "-enableCodeCoverage YES" : ""
 end
 
-def xcodebuildScheme(scheme)
-  if [:ExampleApp, :UIKitFringes, :SpecUIKitFringes].include? scheme
-    scheme
-  else
-    raise "Unhandled xcodebuild scheme"
-  end
-end
-
 def xcodebuild(command, scheme)
   run "set -o pipefail && \
     xcodebuild #{xcodebuildCommand(command)} \
       -workspace HolistiKit.xcworkspace \
-      -scheme '#{xcodebuildScheme(scheme)}' \
+      -scheme '#{scheme}' \
       -destination 'platform=iOS Simulator,name=#{DEVICE},OS=#{IOS_VERSION}' \
       #{xcodebuildCodeCoverage(command)} \
     | xcpretty"
 end
 
 def submit_codecov(scheme)
-  run "bash <(curl -s https://codecov.io/bash) -J '^#{scheme}$'"
+  if CI
+    run "bash <(curl -s https://codecov.io/bash) -J '^#{scheme}$'"
+  end
 end
 
 [:SpecUIKitFringes, :UIKitFringes, :ExampleApp].each do |scheme|
