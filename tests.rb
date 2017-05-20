@@ -35,7 +35,8 @@ end
 
 def submit_codecov(scheme)
   if CI
-    run "bash <(curl -s https://codecov.io/bash) -J '^#{scheme}$'"
+#    run "bash <(curl -s https://codecov.io/bash) -J '^#{scheme}$'"
+    run "curl -s https://codecov.io/bash | bash -s - -J '^#{scheme}$'"
   end
 end
 
