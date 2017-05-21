@@ -33,18 +33,20 @@ def xcodebuild(command, scheme)
     | xcpretty"
 end
 
-def submit_codecov(scheme)
+def submit_codecov
   if CI
-#    run "bash <(curl -s https://codecov.io/bash) -J '^#{scheme}$'"
-    run "curl -s https://codecov.io/bash | bash -s - -J '^#{scheme}$'"
+    #run "bash <(curl -s https://codecov.io/bash) -J '^#{scheme}$'"
+    #run "curl -s https://codecov.io/bash | bash -s - -J '^#{scheme}$'"
+    run "curl -s https://codecov.io/bash | bash -s - -X xcodeplist"
   end
 end
 
 [:SpecUIKitFringes, :UIKitFringes, :ExampleApp].each do |scheme|
   xcodebuild(:build, scheme)
   xcodebuild(:test, scheme)
-  submit_codecov(scheme)
 end
+
+submit_codecov
 
 if @any_failures then
   raise "Tests failed"
