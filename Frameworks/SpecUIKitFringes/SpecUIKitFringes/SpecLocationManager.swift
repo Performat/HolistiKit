@@ -143,6 +143,10 @@ extension SpecLocationManager: LocationManaging {
         }
     }
     
+    public func stopUpdatingLocation() {
+        updatingLocation = false
+    }
+    
     public func authorizationStatus() -> CLAuthorizationStatus {
         if !isLocationServicesEnabled() { return .denied }
         return locationAuthorizationStatus.authorizationStatus

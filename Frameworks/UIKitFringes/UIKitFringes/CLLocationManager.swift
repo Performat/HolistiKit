@@ -39,7 +39,7 @@ public protocol LocationManaging: class {
     func requestLocation()
     func requestWhenInUseAuthorization()
     func startUpdatingLocation()
-    
+    func stopUpdatingLocation()
 }
 extension CLLocationManager: LocationManaging {
     
